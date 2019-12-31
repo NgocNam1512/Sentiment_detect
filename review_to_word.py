@@ -16,7 +16,6 @@ def review_to_words(review):
     for line in f:
         word = line.strip()
         stops.add(word)
-        print(stops)
     #
     # 3. Remove stop words
     meaningful_words = [w for w in words if not w in stops]

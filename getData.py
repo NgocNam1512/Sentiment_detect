@@ -66,6 +66,15 @@ def get_reviews_data(file_name):
         print("-- " + file_name + " found locally")
         return pd.read_csv(file_name)
 
+def countEmoticons(s):
+    positive_count = 0
+    negative_count = 0
+    for emoticon in positive_emoticons:
+        positive_count += s.count(emoticon)
+    for emoticon in negative_emoticons:
+        negative_count += s.count(emoticon)
+    return positive_count, negative_count
+
 def cleaning_data(dataset, file_name):
     # Get the number of reviews based on the dataframe column size
     num_reviews = dataset["text"].size
@@ -88,50 +97,11 @@ def cleaning_data(dataset, file_name):
         for review in clean_train_reviews:
             f.write("%s\n" % review)
 
-def print_words_frequency(train_data_features):
-    # Take a look at the words in the vocabulary
-    vocab = vectorizer.get_feature_names()
-    print "Words in vocabulary:", vocab
-
-    # Sum up the counts of each vocabulary word
-    dist = np.sum(train_data_features, axis=0)
-
-    # For each, print the vocabulary word and the number of times it
-    # appears in the training set
-    print "Words frequency..."
-    for tag, count in zip(vocab, dist):
-        print count, tag
 
 if __name__ =='__main__':
     #preprocess_file("student_manual.train.txt")
-    # Reading the Data
-    clean_train_reviews = pd.read_csv(clean_file, nrows=1000)
-
-    # ignore all 3* reviews
-    clean_train_reviews = clean_train_reviews[clean_train_reviews["score"] != 3]
-    # positive sentiment = 4* or 5* reviews
-    clean_train_reviews["sentiment"] = clean_train_reviews["score"] >= 4
-
-    train, test = train_test_split(clean_train_reviews, test_size=0.2)
-
-    print "Creating the bag of words...\n"
-    vectorizer = CountVectorizer(analyzer="word",
-                                tokenizer=None,
-                                preprocessor=None,
-                                stop_words=None,
-                                max_features=10)
-
-    train_text = train["text"].values.astype('U')
-    test_text = test["text"].values.astype('U')
-
-    # convert data-set to term-document matrix
-    X_train = vectorizer.fit_transform(train_text).toarray()
-    y_train = train["sentiment"]
-
-    X_test = vectorizer.fit_transform(test_text).toarray()
-    y_test = test["sentiment"]
-
-    print_words_frequency(X_train)
+    
+    
         
         
     
